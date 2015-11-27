@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="blue">#5677fc</color>
+    <color name="green">#259b24</color>
+    //material 建议的几种黑色，按视觉效果选择
+    <color name="black_24">#3D000000</color>
+    <color name="black_54">#8A000000</color>
+    <color name="black_87">#DE000000</color>
+</resources>
