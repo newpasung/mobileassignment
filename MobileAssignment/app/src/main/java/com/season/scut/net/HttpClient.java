@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
  * Created by gjz on 11/2/15.
  */
 public class HttpClient {
-    private static final String BASE_URL = "http://121.42.160.104/coordinator/backend/web/";
+    private static final String BASE_URL = "http://121.42.160.104/manager/web/";
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(Context context, String url, RequestParams params, JsonResponseHandler handler){
