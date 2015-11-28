@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager =(AlarmManager)getSystemService(ALARM_SERVICE);
         PendingIntent pendingIntent =PendingIntent.getActivity(this,1
                 ,new Intent(this,NotifyActivity.class),PendingIntent.FLAG_ONE_SHOT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,caseList.get(0).getStarttime()+1000*10,pendingIntent);
+        //alarmManager.set(AlarmManager.RTC_WAKEUP,caseList.get(0).getStarttime()+1000*10,pendingIntent);
     }
 
     @Override
@@ -50,10 +50,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_newcase:{
-                startActivity(new Intent(this,NewCaseActivity.class));
+                startActivityForResult(new Intent(this, NewCaseActivity.class), 111);
+            }break;
+            case R.id.action_sync:{
+                //startActivity(new Intent(this,NewCaseActivity.class));
             }break;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==111&&resultCode==RESULT_OK){
+            //refresh
+        }
     }
 
     class MyAdapter extends RecyclerView.Adapter{
