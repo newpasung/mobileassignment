@@ -18,6 +18,7 @@ public class HttpClient {
 
     public static void get(Context context, String url, RequestParams params, JsonResponseHandler handler){
         handler.setWeakReference(new WeakReference<Context>(context));
+        params.put(RequestParamName.TOKEN, XManager.getToken(context));
         client.get(context, BASE_URL + url, params, handler);
     }
 
