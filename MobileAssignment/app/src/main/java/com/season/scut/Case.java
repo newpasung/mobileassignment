@@ -90,7 +90,7 @@ public class Case implements  Parcelable{
 
     public String getStringStartTime() {
         StringBuilder builder =new StringBuilder();
-        Date startdate =new Date(getStarttime());
+        Date startdate =new Date(getStarttime()*1000);
         builder.append(startdate.getYear());
         builder.append(".");
         builder.append(startdate.getMonth()+1);
