@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.ArrayMap;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,13 +23,14 @@ import java.util.List;
  */
 public class Case implements Parcelable{
 
+    public long id;
     public long starttime;
     public long endtime;
     public long alarmtime;
     public long modifiedtime;
     public String title;
     public String matters;
-    public static HashMap<Long ,Case> caseArrayMap=new HashMap<>();
+    public static HashMap<Long ,Case> caseMap=new HashMap<>();
 
     public Case() {
     }
@@ -119,8 +121,8 @@ public class Case implements Parcelable{
         Case mCase=null;
         try {
             long id =object.getLong("id");
-            if (caseArrayMap.containsKey(id)){
-                mCase= caseArrayMap.get(id);
+            if (caseMap.containsKey(id)){
+                mCase= caseMap.get(id);
                 mCase.starttime=object.getLong("time");
                 mCase.endtime=object.getLong("end_time");
                 mCase.modifiedtime=object.getLong("modified_time");
@@ -129,13 +131,17 @@ public class Case implements Parcelable{
                 mCase.title=object.getString("title");
             }else{
                 mCase =new Case();
+                mCase.id=id;
                 mCase.starttime=object.getLong("time");
                 mCase.endtime=object.getLong("end_time");
                 mCase.modifiedtime=object.getLong("modified_time");
                 mCase.alarmtime =object.getLong("alarm_time");
                 mCase.matters=object.getString("content");
                 mCase.title=object.getString("title");
-                caseArrayMap.put(id,mCase);
+                caseMap.put(id,mCase);
+            }
+            if (mCase.alarmtime>System.currentTimeMillis()){
+                MApplication.getInstance().addNotification(mCase.alarmtime,mCase.id);
             }
             return mCase;
         } catch (JSONException e) {
@@ -144,12 +150,25 @@ public class Case implements Parcelable{
         }
     }
 
-    public List<Case> getListData(){
-        List<Case> caseList = new ArrayList<>();
-        Iterator<Long> iterator =caseArrayMap.keySet().iterator();
-        while(iterator.hasNext()){
-
+    public static List<Case> insertOrUpdate(JSONArray array){
+        try {
+            for (int i=0;i<array.length();i++){
+                JSONObject data =array.getJSONObject(i);
+                insertOrUpdate(data);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        return getListData();
+    }
+
+    public static List<Case> getListData(){
+        List<Case> caseList = new ArrayList<>();
+        Iterator<Long> iterator =caseMap.keySet().iterator();
+        while(iterator.hasNext()){
+            caseList.add(caseMap.get(iterator.next()));
+        }
+        //然后把list发回去
         return caseList;
     }
 

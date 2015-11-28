@@ -2,6 +2,7 @@ package com.season.scut;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.loopj.android.http.RequestParams;
+import com.season.scut.net.HttpClient;
+import com.season.scut.net.JsonResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,28 +31,30 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
     List<Case> caseList;
+    ProgressDialog waitingDialog;
+    MyAdapter adapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        caseList=Case.getDebugData();
+        waitingDialog=new ProgressDialog(this);
+        waitingDialog.show();
+        netRefreshData();
+        caseList=new ArrayList<>();
         mRecyclerView=(RecyclerView)findViewById(R.id.recycler);
-        mRecyclerView.setAdapter(new MyAdapter());
+        adapter=new MyAdapter();
+        mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        AlarmManager alarmManager =(AlarmManager)getSystemService(ALARM_SERVICE);
-        PendingIntent pendingIntent =PendingIntent.getActivity(this,1
-                ,new Intent(this,NotifyActivity.class),PendingIntent.FLAG_ONE_SHOT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,caseList.get(0).getStarttime()+1000*10,pendingIntent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
@@ -55,6 +67,33 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    public void netRefreshData(){
+        RequestParams params =new RequestParams();
+        HttpClient.get(this, "schedule/list", params, new JsonResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                JSONArray array = null;
+                try {
+                    array = response.getJSONArray("data");
+                    caseList=Case.insertOrUpdate(array);
+                    adapter.notifyDataSetChanged();
+                    MApplication.getInstance().loadNotification();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    waitingDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(String message, String for_param) {
+                waitingDialog.dismiss();
+                Toast.makeText(MainActivity.this,"联网失败",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     class MyAdapter extends RecyclerView.Adapter{
         @Override

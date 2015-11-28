@@ -11,10 +11,21 @@ import android.content.SharedPreferences;
  */
 public class MApplication extends Application {
 
+    PendingIntent pendingIntent;
+    public static MApplication mApplication;
+
+    public static MApplication getInstance(){
+        return mApplication;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mApplication=this;
         loadNotification();
+        pendingIntent =PendingIntent.getActivity(this,1
+                ,new Intent
+                (getApplicationContext(),NotifyActivity.class),PendingIntent.FLAG_NO_CREATE);
     }
 
     public synchronized void addNotification(long time,long caseid){
@@ -23,7 +34,8 @@ public class MApplication extends Application {
         SharedPreferences.Editor editor =sharedPreferences.edit();
         //（包括执行过的）
         int totalnum=sharedPreferences.getInt("notification_totalcount",0);
-        //这个东西用某个key+一个顺序索引来表示一个提醒任务的属性
+        /*这个东西用某个key+一个顺序索引来表示一个提醒任务的属性
+        ，事实上那个提醒时间改变了，这里是会有冗余数据的*/
         totalnum++;
         //存入两个数据
         editor.putLong("notification_caseid"+totalnum,caseid);
@@ -35,15 +47,12 @@ public class MApplication extends Application {
 
     public void loadNotification(){
         SharedPreferences sharedPreferences =getSharedPreferences("notifications", MODE_PRIVATE);
-        SharedPreferences.Editor editor =sharedPreferences.edit();
         int totalnum=sharedPreferences.getInt("notification_totalcount", 0);
         if (totalnum<=0)return ;
         //不管效率了--全部查一遍
         int index=1;
         AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
-        PendingIntent pendingIntent =PendingIntent.getActivity(this,1
-                ,new Intent
-                (getApplicationContext(),NotifyActivity.class),PendingIntent.FLAG_ONE_SHOT);
+        alarmManager.cancel(pendingIntent);
         while (index<=totalnum){
             long caseid=sharedPreferences.getLong("notification_caseid",0);
             long time =sharedPreferences.getLong("notification_time",0);
