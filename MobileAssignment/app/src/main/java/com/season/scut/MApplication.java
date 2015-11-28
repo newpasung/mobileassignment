@@ -73,7 +73,7 @@ public class MApplication extends Application {
         totalnum++;
         //存入两个数据
         editor.putLong("notification_caseid" + totalnum, caseid);
-        editor.putLong("notification_time"+totalnum,time);
+        editor.putLong("notification_time" + totalnum, time);
         //更新计数器
         editor.putInt("notification_totalcount", totalnum);
         editor.commit();
@@ -87,7 +87,7 @@ public class MApplication extends Application {
         int index=1;
         AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        long need_time=Long.MAX_VALUE;
+        long need_time=-1;
         long need_caseid=0;
         while (index<=totalnum){
             long caseid=sharedPreferences.getLong("notification_caseid"+index,0);
@@ -95,9 +95,17 @@ public class MApplication extends Application {
             if (caseid==0||time==0){
                 return ;
             }
-            if (need_time>time&&time>System.currentTimeMillis()){
+            if (need_time<System.currentTimeMillis()&&time>System.currentTimeMillis()){
                 need_time=time;
-                need_caseid =caseid;
+            }else{
+                index++;
+                continue;
+            }
+            if (time>System.currentTimeMillis()){
+                if (need_time<time){
+                    need_time=time;
+                    need_caseid =caseid;
+                }
             }
             index++;
         }

@@ -215,7 +215,7 @@ public class Case implements  Parcelable ,Comparable{
         Case mCase ;
         while(iterator.hasNext()){
             mCase=caseMap.get(iterator.next());
-            if (mCase.status==1&&mCase.starttime>=System.currentTimeMillis()/1000){
+            if (mCase.status==1){
                 caseList.add(mCase);
             }
         }
