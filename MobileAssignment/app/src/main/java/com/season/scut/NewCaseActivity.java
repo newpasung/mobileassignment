@@ -121,8 +121,9 @@ public class NewCaseActivity extends Activity {
             Toast.makeText(this,"请完整输入",Toast.LENGTH_SHORT).show();
             return ;
         }
-
         long notifytime=starttime - 60 * Long.valueOf(mEtnotifytime.getText().toString());
+
+
 
         RequestParams params = new RequestParams();
         params.put(RequestParamName.TITLE, title);
@@ -134,11 +135,6 @@ public class NewCaseActivity extends Activity {
         HttpClient.post(this, "schedule/create", params, new JsonResponseHandler() {
             @Override
             public void onSuccess(JSONObject response) {
-                try {
-                    Case.insertOrUpdate(NewCaseActivity.this,response.getJSONObject("data").getJSONObject("schedule"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 setResult(RESULT_OK, new Intent());
                 finish();
             }

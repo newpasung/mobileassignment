@@ -2,11 +2,14 @@ package com.season.scut;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
@@ -45,9 +48,18 @@ public class MApplication extends Application {
         super.onCreate();
         mApplication=this;
         loadNotification();
+        LocalBroadcastManager manager =LocalBroadcastManager.getInstance(this);
+        manager.registerReceiver(receiver,new IntentFilter());
         pendingIntent =PendingIntent.getActivity(this,1
                 ,new Intent
                 (getApplicationContext(),NotifyActivity.class),PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        LocalBroadcastManager manager =LocalBroadcastManager.getInstance(this);
+        manager.unregisterReceiver(receiver);
     }
 
     public synchronized void addNotification(long time,long caseid){
@@ -78,20 +90,20 @@ public class MApplication extends Application {
         long need_time=Long.MAX_VALUE;
         long need_caseid=0;
         while (index<=totalnum){
-            long caseid=sharedPreferences.getLong("notification_caseid",0);
-            long time =sharedPreferences.getLong("notification_time",0);
+            long caseid=sharedPreferences.getLong("notification_caseid"+index,0);
+            long time =sharedPreferences.getLong("notification_time"+index,0);
             if (caseid==0||time==0){
                 return ;
             }
-            if (need_time>time&&time>System.currentTimeMillis()/1000){
+            if (need_time>time&&time>System.currentTimeMillis()){
                 need_time=time;
                 need_caseid =caseid;
             }
             index++;
         }
-        alarmManager.set(AlarmManager.RTC_WAKEUP, Case.getCaseById(need_caseid).getAlarmtime(), pendingIntent);
+        if (Case.getCaseById(need_caseid)!=null)
+        alarmManager.set(AlarmManager.RTC_WAKEUP, Case.getCaseById(need_caseid).getAlarmtime() * 1000, pendingIntent);
     }
-
 
     public void netUpdaeCase(Case mcase){
         long starttime = mcase.getStarttime();
@@ -99,6 +111,12 @@ public class MApplication extends Application {
         String title =mcase.getTitle();
         String matter =mcase.getMatters();
         long notifytime=mcase.getAlarmtime();
+
+        Case.getCaseById(mcase.getId()).starttime=starttime;
+        Case.getCaseById(mcase.getId()).endtime=endtime;
+        Case.getCaseById(mcase.getId()).title=title;
+        Case.getCaseById(mcase.getId()).matters=matter;
+        Case.getCaseById(mcase.getId()).alarmtime=notifytime;
 
         RequestParams params = new RequestParams();
         params.put("id", mcase.getId());
@@ -124,6 +142,5 @@ public class MApplication extends Application {
             }
         });
     }
-
 
 }

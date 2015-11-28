@@ -186,8 +186,8 @@ public class Case implements  Parcelable ,Comparable{
                 mCase.title=object.getString("title");
                 caseMap.put(id,mCase);
             }
-            if (mCase.alarmtime>System.currentTimeMillis()){
-                MApplication.getInstance().addNotification(mCase.alarmtime,mCase.id);
+            if (mCase.alarmtime*1000>System.currentTimeMillis()){
+                MApplication.getInstance().addNotification(mCase.alarmtime*1000,mCase.id);
             }
             return mCase;
         } catch (JSONException e) {
@@ -215,7 +215,7 @@ public class Case implements  Parcelable ,Comparable{
         Case mCase ;
         while(iterator.hasNext()){
             mCase=caseMap.get(iterator.next());
-            if (mCase.status==1){
+            if (mCase.status==1&&mCase.starttime>=System.currentTimeMillis()/1000){
                 caseList.add(mCase);
             }
         }

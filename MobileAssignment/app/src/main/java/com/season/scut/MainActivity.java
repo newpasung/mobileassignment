@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_newcase:{
                 startActivityForResult(new Intent(this, NewCaseActivity.class), 111);
             }break;
+            case R.id.action_sync :{
+                netRefreshData();
+            }break;
         }
         return true;
     }

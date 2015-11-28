@@ -127,12 +127,14 @@ public class CaseActivity extends Activity {
     }
 
     public void netDelete(final Case mcase) {
+        Case.deletebyid(mcase.getId());
         RequestParams params = new RequestParams();
         params.put("schedule_id", mcase.getId());
+
         HttpClient.post(this, "schedule/delete", params, new JsonResponseHandler() {
             @Override
             public void onSuccess(JSONObject response) {
-                Case.deletebyid(mcase.getId());
+//                Case.deletebyid(mcase.getId());
                 setResult(RESULT_OK, new Intent());
                 finish();
             }
@@ -152,6 +154,12 @@ public class CaseActivity extends Activity {
         String title =mEttitle.getText().toString();
         String matter =mEtmatter.getText().toString();
         long notifytime=starttime - 60 * Long.valueOf(mEtAlarmTime.getText().toString());
+
+        Case.getCaseById(mcase.getId()).starttime=starttime;
+        Case.getCaseById(mcase.getId()).endtime=endtime;
+        Case.getCaseById(mcase.getId()).title=title;
+        Case.getCaseById(mcase.getId()).matters=matter;
+        Case.getCaseById(mcase.getId()).alarmtime=notifytime;
 
         RequestParams params = new RequestParams();
         params.put("schedule_id", mcase.getId());
