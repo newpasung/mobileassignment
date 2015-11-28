@@ -56,7 +56,7 @@ public class NewCaseActivity extends Activity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 startDate.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 startDate.set(Calendar.MINUTE,minute);
-                mBtnstarttime.setText(startDate.get(Calendar.YEAR) + "." + startDate.get(Calendar.MONTH)+1 + "." + startDate.get(Calendar.DATE) + " " + startDate.get(Calendar.HOUR_OF_DAY) + ":" + startDate.get(Calendar.MINUTE));
+                mBtnstarttime.setText(startDate.get(Calendar.YEAR) + "." + (startDate.get(Calendar.MONTH)+1) + "." + startDate.get(Calendar.DATE) + " " + startDate.get(Calendar.HOUR_OF_DAY) + ":" + startDate.get(Calendar.MINUTE));
             }
         },0,0,true);
         final TimePickerDialog endtimedialog =new TimePickerDialog(NewCaseActivity.this, new TimePickerDialog.OnTimeSetListener() {
@@ -64,7 +64,7 @@ public class NewCaseActivity extends Activity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 endDate.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 endDate.set(Calendar.MINUTE,minute);
-                mBtnendtime.setText(endDate.get(Calendar.YEAR) + "." + endDate.get(Calendar.MONTH)+1 + "." + endDate.get(Calendar.DATE) + " " + endDate.get(Calendar.HOUR_OF_DAY) + ":" + endDate.get(Calendar.MINUTE));
+                mBtnendtime.setText(endDate.get(Calendar.YEAR) + "." + (endDate.get(Calendar.MONTH)+1) + "." + endDate.get(Calendar.DATE) + " " + endDate.get(Calendar.HOUR_OF_DAY) + ":" + endDate.get(Calendar.MINUTE));
             }
         },0,0,true);
 
