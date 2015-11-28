@@ -83,6 +83,38 @@ public class Case implements Parcelable{
     public long getModifiedtime() {
         return modifiedtime;
     }
+    public String getStringStartTime() {
+        StringBuilder builder =new StringBuilder();
+        Date startdate =new Date(getStarttime());
+        builder.append(startdate.getYear());
+        builder.append(".");
+        builder.append(startdate.getMonth()+1);
+        builder.append(".");
+        builder.append(startdate.getDay());
+        builder.append(" ");
+        builder.append(startdate.getHours());
+        builder.append(":");
+        builder.append(startdate.getMinutes());
+
+        return builder.toString();
+    }
+
+    public String getStringEndTime() {
+        StringBuilder builder =new StringBuilder();
+        Date startdate =new Date(getEndtime());
+        builder.append(startdate.getYear());
+        builder.append(".");
+        builder.append(startdate.getMonth()+1);
+        builder.append(".");
+        builder.append(startdate.getDay());
+        builder.append(" ");
+        builder.append(startdate.getHours());
+        builder.append(":");
+        builder.append(startdate.getMinutes());
+
+        return builder.toString();
+
+    }
 
     public String getStrTime(){
         StringBuilder builder =new StringBuilder();
