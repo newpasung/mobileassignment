@@ -6,7 +6,7 @@
     <TextView
         android:paddingLeft="8dp"
         android:id="@+id/tv_title"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/black_87"
         android:paddingRight="8dp"
         android:textSize="38sp"
@@ -34,5 +34,11 @@
         android:text="阿斯顿迫切asdf阿斯顿飞吻奥威尔而已秦莞尔  asdf为普洱秦莞尔【我去玩儿加他和请问【我扔进去玩"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <View
+        android:layout_marginTop="8dp"
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="#bdbdbd"/>
 
 </LinearLayout>

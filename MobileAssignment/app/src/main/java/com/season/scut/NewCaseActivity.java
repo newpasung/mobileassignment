@@ -80,7 +80,7 @@ public class NewCaseActivity extends Activity {
                                 startDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                                 starttimedialog.show();
                             }
-                        },2015,11,28);
+                        },2015,10,28);
                 datePickerDialog.show();
 
             }
@@ -98,7 +98,7 @@ public class NewCaseActivity extends Activity {
                         endDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                         endtimedialog.show();
                     }
-                },2015,11,28);
+                },2015,10,28);
                 datePickerDialog.show();
             }
 
