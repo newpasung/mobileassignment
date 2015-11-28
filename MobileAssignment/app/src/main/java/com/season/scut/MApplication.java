@@ -7,10 +7,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.season.scut.net.HttpClient;
 import com.season.scut.net.JsonResponseHandler;
+import com.season.scut.net.RequestParamName;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +30,8 @@ public class MApplication extends Application {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(ACTION_MODIFY)){
-                modifiyData();
+                Case mCase=intent.getParcelableExtra("data");
+                netUpdaeCase(mCase);
             }
         }
     };
@@ -89,15 +92,27 @@ public class MApplication extends Application {
         alarmManager.set(AlarmManager.RTC_WAKEUP, Case.getCaseById(need_caseid).getAlarmtime(), pendingIntent);
     }
 
-    public void modifiyData(){
-        RequestParams params =new RequestParams();
-        HttpClient.post(this, "", params, new JsonResponseHandler() {
+
+    public void netUpdaeCase(Case mcase){
+        long starttime = mcase.getStarttime();
+        long endtime =mcase.getEndtime();
+        String title =mcase.getTitle();
+        String matter =mcase.getMatters();
+        long notifytime=mcase.getAlarmtime();
+
+        RequestParams params = new RequestParams();
+        params.put("id", mcase.getId());
+        params.put(RequestParamName.TITLE, title);
+        params.put(RequestParamName.START_TIME, starttime);
+        params.put(RequestParamName.END_TIME, endtime);
+        params.put(RequestParamName.CONTENT, matter);
+        params.put(RequestParamName.ALARM_TIME, notifytime);
+
+        HttpClient.post(this, "schedule/update", params, new JsonResponseHandler() {
             @Override
             public void onSuccess(JSONObject response) {
                 try {
-                    JSONObject data =response.getJSONObject("data");
-                    Case.insertOrUpdate(getInstance(),data.getJSONObject("schedule"));
-                    //更新提醒功能
+                    Case.insertOrUpdate(getInstance(),response.getJSONObject("data").getJSONObject("schedule"));
                     loadNotification();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -106,9 +121,9 @@ public class MApplication extends Application {
 
             @Override
             public void onFailure(String message, String for_param) {
-
             }
         });
     }
+
 
 }

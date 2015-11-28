@@ -28,10 +28,12 @@ public class Case implements  Parcelable{
     public long modifiedtime;
     public String title;
     public String matters;
+    public int status;
     public static HashMap<Long ,Case> caseMap=new HashMap<>();
 
     public Case() {
         this.modifiedtime=0l;
+        this.status=1;
     }
 
     protected Case(Parcel in) {
@@ -42,6 +44,7 @@ public class Case implements  Parcelable{
         modifiedtime = in.readLong();
         title = in.readString();
         matters = in.readString();
+        status =in.readInt();
     }
 
     public static final Creator<Case> CREATOR = new Creator<Case>() {
@@ -83,6 +86,7 @@ public class Case implements  Parcelable{
     public long getModifiedtime() {
         return modifiedtime;
     }
+
     public String getStringStartTime() {
         StringBuilder builder =new StringBuilder();
         Date startdate =new Date(getStarttime());
@@ -168,8 +172,12 @@ public class Case implements  Parcelable{
                     LocalBroadcastManager manager =LocalBroadcastManager.getInstance(context);
                     Intent intent =new Intent();
                     intent.setAction(MApplication.ACTION_MODIFY);
+                    intent.putExtra("data",mCase);
                     manager.sendBroadcast(intent);
                     return mCase;
+                }
+                if (object.has("status")){
+                    mCase.status=object.getInt("status");
                 }
                 mCase.starttime=object.getLong("time");
                 mCase.endtime=object.getLong("end_time");
@@ -181,6 +189,9 @@ public class Case implements  Parcelable{
                 mCase =new Case();
                 mCase.id=id;
                 mCase.starttime=object.getLong("time");
+                if (object.has("status")){
+                    mCase.status=object.getInt("status");
+                }
                 mCase.endtime=object.getLong("end_time");
                 mCase.modifiedtime=object.getLong("modified_time");
                 mCase.alarmtime =object.getLong("alarm_time");
@@ -210,11 +221,16 @@ public class Case implements  Parcelable{
         return getListData();
     }
 
+    /**获取可用的case数据*/
     public static List<Case> getListData(){
         List<Case> caseList = new ArrayList<>();
         Iterator<Long> iterator =caseMap.keySet().iterator();
+        Case mCase ;
         while(iterator.hasNext()){
-            caseList.add(caseMap.get(iterator.next()));
+            mCase=caseMap.get(iterator.next());
+            if (mCase.status==1){
+                caseList.add(mCase);
+            }
         }
         //然后把list发回去
         return caseList;
