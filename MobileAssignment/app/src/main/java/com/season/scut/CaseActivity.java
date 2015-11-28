@@ -50,7 +50,7 @@ public class CaseActivity extends Activity {
         final Case mCase =getIntent().getParcelableExtra("data");
         mEttitle.setText(mCase.getTitle());
         mEtmatter.setText(mCase.getMatters());
-        mEtAlarmTime.setText("提前"+(int)((mCase.starttime - (mCase.alarmtime))/60) + "分钟提醒");
+        mEtAlarmTime.setText("提前"+((mCase.starttime - (mCase.alarmtime))/60) + "分钟提醒");
         mBtnstarttime.setText(mCase.getStringStartTime());
         mBtnendtime.setText(mCase.getStringEndTime());
 
