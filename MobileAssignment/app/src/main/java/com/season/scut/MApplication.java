@@ -61,7 +61,7 @@ public class MApplication extends Application {
             if (caseid==0||time==0){
                 return ;
             }
-            if (need_time>time&&time>System.currentTimeMillis()){
+            if (need_time>time&&time>System.currentTimeMillis()/1000){
                 need_time=time;
                 need_caseid =caseid;
             }
