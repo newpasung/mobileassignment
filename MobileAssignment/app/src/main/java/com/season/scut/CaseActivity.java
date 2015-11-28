@@ -116,8 +116,8 @@ public class CaseActivity extends Activity {
     }
 
     public void netUpdaeCase(Case mcase){
-        long starttime = startDate.getTime().getTime();
-        long endtime =endDate.getTime().getTime();
+        long starttime = startDate.getTime().getTime()/1000;
+        long endtime =endDate.getTime().getTime()/1000;
         String title =mEttitle.getText().toString();
         String matter =mEtmatter.getText().toString();
         long notifytime=starttime - 60 * Long.valueOf(mEtAlarmTime.getText().toString());

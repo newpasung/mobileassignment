@@ -111,8 +111,8 @@ public class NewCaseActivity extends Activity {
     }
 
     public void netNewCase(){
-        long starttime = startDate.getTime().getTime();
-        long endtime =endDate.getTime().getTime();
+        long starttime = startDate.getTime().getTime()/1000;
+        long endtime =endDate.getTime().getTime()/1000;
         String title =mEttitle.getText().toString();
         String matter =mEtmatter.getText().toString();
         if (TextUtils.isEmpty(title)||TextUtils.isEmpty(matter)||TextUtils.isEmpty(mEtnotifytime.getText().toString())){
