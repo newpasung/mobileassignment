@@ -1,7 +1,10 @@
 package com.season.scut;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -156,15 +159,24 @@ public class Case implements Parcelable{
         return builder.toString();
     }
 
-    public static Case insertOrUpdate(JSONObject object){
+    public static Case insertOrUpdate(Context context,JSONObject object){
         Case mCase=null;
         try {
             long id =object.getLong("id");
             if (caseMap.containsKey(id)){
+                long modifiedtime=object.getLong("modified_time");
                 mCase= caseMap.get(id);
+                if (mCase.modifiedtime>modifiedtime){
+                    //这里我们发现我们有新数据
+                    LocalBroadcastManager manager =LocalBroadcastManager.getInstance(context);
+                    Intent intent =new Intent();
+                    intent.setAction(MApplication.ACTION_MODIFY);
+                    manager.sendBroadcast(intent);
+                    return mCase;
+                }
                 mCase.starttime=object.getLong("time");
                 mCase.endtime=object.getLong("end_time");
-                mCase.modifiedtime=object.getLong("modified_time");
+                mCase.modifiedtime=modifiedtime;
                 mCase.alarmtime =object.getLong("alarm_time");
                 mCase.matters=object.getString("content");
                 mCase.title=object.getString("title");
@@ -189,11 +201,11 @@ public class Case implements Parcelable{
         }
     }
 
-    public static List<Case> insertOrUpdate(JSONArray array){
+    public static List<Case> insertOrUpdate(Context context,JSONArray array){
         try {
             for (int i=0;i<array.length();i++){
                 JSONObject data =array.getJSONObject(i);
-                insertOrUpdate(data);
+                insertOrUpdate(context,data);
             }
         } catch (JSONException e) {
             e.printStackTrace();

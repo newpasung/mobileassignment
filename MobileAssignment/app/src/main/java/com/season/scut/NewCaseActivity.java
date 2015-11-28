@@ -19,6 +19,7 @@ import com.season.scut.net.HttpClient;
 import com.season.scut.net.JsonResponseHandler;
 import com.season.scut.net.RequestParamName;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
@@ -75,7 +76,7 @@ public class NewCaseActivity extends Activity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 startDate.set(Calendar.YEAR,year);
-                                startDate.set(Calendar.MONTH,monthOfYear);
+                                startDate.set(Calendar.MONTH,monthOfYear+1);
                                 startDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                                 starttimedialog.show();
                             }
@@ -93,7 +94,7 @@ public class NewCaseActivity extends Activity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         endDate.set(Calendar.YEAR,year);
-                        endDate.set(Calendar.MONTH,monthOfYear);
+                        endDate.set(Calendar.MONTH,monthOfYear+1);
                         endDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                         endtimedialog.show();
                     }
@@ -134,6 +135,11 @@ public class NewCaseActivity extends Activity {
         HttpClient.post(this, "schedule/create", params, new JsonResponseHandler() {
             @Override
             public void onSuccess(JSONObject response) {
+                try {
+                    Case.insertOrUpdate(NewCaseActivity.this,response.getJSONObject("data").getJSONObject("schedule"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 setResult(RESULT_OK, new Intent());
                 finish();
             }
