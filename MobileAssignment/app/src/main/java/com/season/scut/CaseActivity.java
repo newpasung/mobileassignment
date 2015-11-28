@@ -126,12 +126,13 @@ public class CaseActivity extends Activity {
         });
     }
 
-    public void netDelete(Case mcase) {
+    public void netDelete(final Case mcase) {
         RequestParams params = new RequestParams();
         params.put("schedule_id", mcase.getId());
         HttpClient.post(this, "schedule/delete", params, new JsonResponseHandler() {
             @Override
             public void onSuccess(JSONObject response) {
+                Case.deletebyid(mcase.getId());
                 setResult(RESULT_OK, new Intent());
                 finish();
             }

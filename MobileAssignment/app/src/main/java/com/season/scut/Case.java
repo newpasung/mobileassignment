@@ -240,4 +240,8 @@ public class Case implements  Parcelable{
         dest.writeString(title);
         dest.writeString(matters);
     }
+
+    public static void deletebyid(long id) {
+        caseMap.remove(id);
+    }
 }
