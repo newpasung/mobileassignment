@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -34,6 +35,7 @@ public class CaseActivity extends Activity {
     Button mBtnstarttime;
     Button mBtnendtime;
     Button mBtnOK;
+    Button mbtnDelete;
     GregorianCalendar startDate=new GregorianCalendar(Locale.CHINA);
     GregorianCalendar endDate =new GregorianCalendar(Locale.CHINA);
     @Override
@@ -46,8 +48,10 @@ public class CaseActivity extends Activity {
         mBtnstarttime=(Button)findViewById(R.id.btn_starttime);
         mBtnendtime=(Button)findViewById(R.id.btn_endtime);
         mBtnOK=(Button)findViewById(R.id.btn_ok);
+        mbtnDelete = (Button)findViewById(R.id.btn_delete);
 
         final Case mCase =getIntent().getParcelableExtra("data");
+        Log.i("schedule_id" , mCase.id+"");
         mEttitle.setText(mCase.getTitle());
         mEtmatter.setText(mCase.getMatters());
         mEtAlarmTime.setText("提前"+((mCase.starttime - (mCase.alarmtime))/60) + "分钟提醒");
@@ -113,6 +117,33 @@ public class CaseActivity extends Activity {
                 netUpdaeCase(mCase);
             }
         });
+
+        mbtnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                netDelete(mCase);
+            }
+        });
+    }
+
+    public void netDelete(final Case mcase) {
+        RequestParams params = new RequestParams();
+        params.put("schedule_id", mcase.getId());
+        HttpClient.post(this, "schedule/delete", params, new JsonResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                Case.deletebyid(mcase.getId());
+                setResult(RESULT_OK, new Intent());
+                finish();
+            }
+
+            @Override
+            public void onFailure(String message, String for_param) {
+                if (message != null) {
+                    Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void netUpdaeCase(Case mcase){
@@ -123,7 +154,7 @@ public class CaseActivity extends Activity {
         long notifytime=starttime - 60 * Long.valueOf(mEtAlarmTime.getText().toString());
 
         RequestParams params = new RequestParams();
-        params.put("id", mcase.getId());
+        params.put("schedule_id", mcase.getId());
         params.put(RequestParamName.TITLE, title);
         params.put(RequestParamName.START_TIME, starttime);
         params.put(RequestParamName.END_TIME, endtime);

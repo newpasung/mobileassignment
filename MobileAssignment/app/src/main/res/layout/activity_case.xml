@@ -37,6 +37,15 @@
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="添加日程"
+        android:text="修改日程"
+        android:textColor="#fff"/>
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:background="#e51c23"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="删除日程"
         android:textColor="#fff"/>
 </LinearLayout>
