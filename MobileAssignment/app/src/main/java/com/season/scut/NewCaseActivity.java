@@ -4,12 +4,22 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.loopj.android.http.RequestParams;
+import com.season.scut.net.HttpClient;
+import com.season.scut.net.JsonResponseHandler;
+import com.season.scut.net.RequestParamName;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -25,6 +35,7 @@ public class NewCaseActivity extends Activity {
     EditText mEtnotifytime;
     Button mBtnstarttime;
     Button mBtnendtime;
+    Button mBtnOK;
     GregorianCalendar startDate=new GregorianCalendar(Locale.CHINA);
     GregorianCalendar endDate =new GregorianCalendar(Locale.CHINA);
     @Override
@@ -36,13 +47,14 @@ public class NewCaseActivity extends Activity {
         mEtnotifytime=(EditText)findViewById(R.id.et_notifytime);
         mBtnstarttime=(Button)findViewById(R.id.btn_starttime);
         mBtnendtime=(Button)findViewById(R.id.btn_endtime);
+        mBtnOK=(Button)findViewById(R.id.btn_ok);
 
         final TimePickerDialog starttimedialog =new TimePickerDialog(NewCaseActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 startDate.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 startDate.set(Calendar.MINUTE,minute);
-                mBtnstarttime.setText(startDate.toString());
+                mBtnstarttime.setText(startDate.get(Calendar.YEAR) + "." + startDate.get(Calendar.MONTH) + "." + startDate.get(Calendar.DATE) + " " + startDate.get(Calendar.HOUR) + ":" + startDate.get(Calendar.MINUTE));
             }
         },0,0,true);
         final TimePickerDialog endtimedialog =new TimePickerDialog(NewCaseActivity.this, new TimePickerDialog.OnTimeSetListener() {
@@ -50,7 +62,7 @@ public class NewCaseActivity extends Activity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 endDate.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 endDate.set(Calendar.MINUTE,minute);
-                mBtnstarttime.setText(endDate.toString());
+                mBtnendtime.setText(endDate.get(Calendar.YEAR) + "." + endDate.get(Calendar.MONTH) + "." + endDate.get(Calendar.DATE) + " " + endDate.get(Calendar.HOUR) + ":" + endDate.get(Calendar.MINUTE));
             }
         },0,0,true);
 
@@ -66,7 +78,7 @@ public class NewCaseActivity extends Activity {
                                 startDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                                 starttimedialog.show();
                             }
-                        },2015,0,0);
+                        },2015,11,28);
                 datePickerDialog.show();
 
             }
@@ -84,10 +96,17 @@ public class NewCaseActivity extends Activity {
                         endDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                         endtimedialog.show();
                     }
-                },2015,0,0);
+                },2015,11,28);
                 datePickerDialog.show();
             }
 
+        });
+
+        mBtnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                netNewCase();
+            }
         });
     }
 
@@ -96,7 +115,29 @@ public class NewCaseActivity extends Activity {
         long endtime =endDate.getTime().getTime();
         String title =mEttitle.getText().toString();
         String matter =mEtmatter.getText().toString();
-        String notifytime=mEtnotifytime.getText().toString();
+        long notifytime=starttime - 60 * Long.valueOf(mEtnotifytime.getText().toString());
+
+        RequestParams params = new RequestParams();
+        params.put(RequestParamName.TITLE, title);
+        params.put(RequestParamName.START_TIME, starttime);
+        params.put(RequestParamName.END_TIME, endtime);
+        params.put(RequestParamName.CONTENT, matter);
+        params.put(RequestParamName.ALARM_TIME, notifytime);
+
+        HttpClient.post(this, "schedule/create", params, new JsonResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                setResult(RESULT_OK, new Intent());
+                finish();
+            }
+
+            @Override
+            public void onFailure(String message, String for_param) {
+                if (message != null) {
+                    Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 }

@@ -25,7 +25,6 @@ import org.json.JSONObject;
  * Created by Administrator on 2015/11/27.
  */
 public class LoginActivity extends Activity {
-    final String KEY_TOKEN="HAHAHAHAHAASDFASDFAS";
     final String KEY_LOGINSTATE="SAEIOWEHROAWHE";
     final int VALUE_LOGINED=1;
     final int VALUE_NOT_LOGIN=0;
@@ -73,9 +72,6 @@ public class LoginActivity extends Activity {
             public void onSuccess(JSONObject response) {
                 try {
                     savaLoginState(response.getJSONObject("data").getJSONObject("user").getString("token"));
-                    SharedPreferences preferences =getPreferences(MODE_PRIVATE);
-                    String token = preferences.getString(KEY_TOKEN, null);
-                    Log.i("token", token);
                     startActivity(new Intent(getApplication(), MainActivity.class));
                     finish();
                 } catch (JSONException e) {
@@ -94,15 +90,12 @@ public class LoginActivity extends Activity {
     }
 
     public boolean isLogined(){
-        return getPreferences(MODE_PRIVATE).getInt(KEY_LOGINSTATE,VALUE_NOT_LOGIN)!=VALUE_NOT_LOGIN;
+        return XManager.isLogined(this);
     }
 
     public void savaLoginState(String token){
-        SharedPreferences preferences =getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor =preferences.edit();
-        editor.putString(KEY_TOKEN, token);
-        editor.putInt(KEY_LOGINSTATE,VALUE_LOGINED);
-        editor.commit();
+        XManager.setLoginStatus(getApplication(), true);
+        XManager.setToken(getApplication(), token);
     }
 
     @Override

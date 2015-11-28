@@ -4,20 +4,34 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:paddingLeft="8dp"
+        android:id="@+id/tv_title"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/black_87"
+        android:paddingRight="8dp"
+        android:textSize="38sp"
+        android:text="asdfasdfasdfasdfas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:id="@+id/tv_time"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:textSize="28sp"
         android:layout_marginTop="8dp"
         android:background="#b0bec5"
-        android:paddingLeft="8dp"
         android:text="alsdjfalksdflasd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/tv_title"
-        android:layout_margin="8dp"
-        android:textSize="20sp"
-        android:text="alksjdowienfasldkfjs"
+        android:id="@+id/tv_matter"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:text="阿斯顿迫切asdf阿斯顿飞吻奥威尔而已秦莞尔  asdf为普洱秦莞尔【我去玩儿加他和请问【我扔进去玩"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

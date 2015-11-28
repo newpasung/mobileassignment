@@ -17,6 +17,7 @@
     <EditText
         android:id="@+id/et_notifytime"
         android:hint="提前？分钟提醒"
+        android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
@@ -29,4 +30,13 @@
         android:text="结束时间?"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="添加日程"
+        android:textColor="#fff"/>
 </LinearLayout>
