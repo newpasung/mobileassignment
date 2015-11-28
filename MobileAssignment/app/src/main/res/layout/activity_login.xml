@@ -18,7 +18,8 @@
         android:text="密码"
         android:textSize="24sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"/>
     <EditText
         android:id="@+id/et_passwd"
         android:layout_width="match_parent"
