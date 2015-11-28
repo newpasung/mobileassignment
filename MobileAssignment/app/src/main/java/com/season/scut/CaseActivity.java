@@ -54,7 +54,7 @@ public class CaseActivity extends Activity {
         Log.i("schedule_id" , mCase.id+"");
         mEttitle.setText(mCase.getTitle());
         mEtmatter.setText(mCase.getMatters());
-        mEtAlarmTime.setText("提前"+((mCase.starttime - (mCase.alarmtime))/60) + "分钟提醒");
+        mEtAlarmTime.setHint("提前"+((mCase.starttime - (mCase.alarmtime))/60) + "分钟提醒");
         mBtnstarttime.setText(mCase.getStringStartTime());
         mBtnendtime.setText(mCase.getStringEndTime());
 
