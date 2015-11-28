@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         adapter=new MyAdapter();
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_newcase:{
-                startActivityForResult(new Intent(this,NewCaseActivity.class), 111);
+                startActivityForResult(new Intent(this, NewCaseActivity.class), 111);
             }break;
         }
         return true;
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray array = null;
                 try {
                     array = response.getJSONArray("data");
-                    caseList=Case.insertOrUpdate(array);
+                    caseList=Case.insertOrUpdate(MainActivity.this,array);
                     adapter.notifyDataSetChanged();
                     MApplication.getInstance().loadNotification();
                 } catch (JSONException e) {

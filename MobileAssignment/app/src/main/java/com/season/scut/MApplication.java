@@ -3,16 +3,35 @@ package com.season.scut;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import com.loopj.android.http.RequestParams;
+import com.season.scut.net.HttpClient;
+import com.season.scut.net.JsonResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2015/11/27.
  */
 public class MApplication extends Application {
 
+    public static final String ACTION_MODIFY ="modifyexistingdata";
     PendingIntent pendingIntent;
     public static MApplication mApplication;
+
+    BroadcastReceiver receiver =new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(ACTION_MODIFY)){
+                modifiyData();
+            }
+        }
+    };
 
     public static MApplication getInstance(){
         return mApplication;
@@ -38,10 +57,10 @@ public class MApplication extends Application {
         ，事实上那个提醒时间改变了，这里是会有冗余数据的*/
         totalnum++;
         //存入两个数据
-        editor.putLong("notification_caseid"+totalnum,caseid);
+        editor.putLong("notification_caseid" + totalnum, caseid);
         editor.putLong("notification_time"+totalnum,time);
         //更新计数器
-        editor.putInt("notification_totalcount",totalnum);
+        editor.putInt("notification_totalcount", totalnum);
         editor.commit();
     }
 
@@ -67,6 +86,29 @@ public class MApplication extends Application {
             }
             index++;
         }
-        alarmManager.set(AlarmManager.RTC_WAKEUP,Case.getCaseById(need_caseid).getAlarmtime(),pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, Case.getCaseById(need_caseid).getAlarmtime(), pendingIntent);
     }
+
+    public void modifiyData(){
+        RequestParams params =new RequestParams();
+        HttpClient.post(this, "", params, new JsonResponseHandler() {
+            @Override
+            public void onSuccess(JSONObject response) {
+                try {
+                    JSONObject data =response.getJSONObject("data");
+                    Case.insertOrUpdate(getInstance(),data.getJSONObject("schedule"));
+                    //更新提醒功能
+                    loadNotification();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String message, String for_param) {
+
+            }
+        });
+    }
+
 }
