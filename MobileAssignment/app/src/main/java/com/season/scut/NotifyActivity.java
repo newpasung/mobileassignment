@@ -25,9 +25,7 @@ public class NotifyActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode==KeyEvent.KEYCODE_BACK){
             Intent intent =new Intent();
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.setAction(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setClass(this,MainActivity.class);
             startActivity(intent);
         }
         return super.onKeyDown(keyCode, event);

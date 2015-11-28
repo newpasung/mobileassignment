@@ -11,7 +11,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Administrator on 2015/11/27.
@@ -23,8 +24,8 @@ public class NewCaseActivity extends Activity {
     EditText mEtnotifytime;
     Button mBtnstarttime;
     Button mBtnendtime;
-    Date startDate;
-    Date endDate;
+    GregorianCalendar startDate;
+    GregorianCalendar endDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,15 +39,17 @@ public class NewCaseActivity extends Activity {
         final TimePickerDialog starttimedialog =new TimePickerDialog(NewCaseActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                startDate.setHours(hourOfDay);
-                startDate.setMinutes(minute);
+                startDate.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                startDate.set(Calendar.MINUTE,minute);
+                mBtnstarttime.setText(startDate.toString());
             }
         },0,0,true);
         final TimePickerDialog endtimedialog =new TimePickerDialog(NewCaseActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                endDate.setHours(hourOfDay);
-                endDate.setMinutes(minute);
+                endDate.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                endDate.set(Calendar.MINUTE,minute);
+                mBtnstarttime.setText(endDate.toString());
             }
         },0,0,true);
 
@@ -57,7 +60,9 @@ public class NewCaseActivity extends Activity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                startDate =new Date(year,monthOfYear,dayOfMonth);
+                                startDate.set(Calendar.YEAR,year);
+                                startDate.set(Calendar.MONTH,monthOfYear);
+                                startDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                                 starttimedialog.show();
                             }
                         },2015,0,0);
@@ -73,7 +78,9 @@ public class NewCaseActivity extends Activity {
                         , new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        endDate =new Date(year,monthOfYear,dayOfMonth);
+                        endDate.set(Calendar.YEAR,year);
+                        endDate.set(Calendar.MONTH,monthOfYear);
+                        endDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                         endtimedialog.show();
                     }
                 },2015,0,0);
@@ -84,8 +91,8 @@ public class NewCaseActivity extends Activity {
     }
 
     public void netNewCase(){
-        long starttime = startDate.getTime();
-        long endtime =endDate.getTime();
+        long starttime = startDate.getTime().getTime();
+        long endtime =endDate.getTime().getTime();
         String title =mEttitle.getText().toString();
         String matter =mEtmatter.getText().toString();
         String notifytime=mEtnotifytime.getText().toString();
