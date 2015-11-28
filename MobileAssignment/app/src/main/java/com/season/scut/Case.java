@@ -109,6 +109,9 @@ public class Case implements Parcelable{
             caseList.add(new Case(System.currentTimeMillis(),System.currentTimeMillis()
                     ,"matter"+i,"title"+i));
         }
+
+
+
         return caseList;
     }
 
