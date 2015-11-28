@@ -2,18 +2,13 @@ package com.season.scut;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.ArrayMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -75,6 +70,18 @@ public class Case implements Parcelable{
 
     public String getTitle() {
         return title;
+    }
+
+    public long getAlarmtime() {
+        return alarmtime;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public long getModifiedtime() {
+        return modifiedtime;
     }
 
     public String getStrTime(){
@@ -179,6 +186,10 @@ public class Case implements Parcelable{
                     ,"matter"+i,"title"+i));
         }
         return caseList;
+    }
+
+    public static Case getCaseById(long id){
+        return caseMap.get(id);
     }
 
     @Override

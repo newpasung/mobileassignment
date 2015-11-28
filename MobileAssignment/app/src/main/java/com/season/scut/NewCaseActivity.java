@@ -3,10 +3,9 @@ package com.season.scut;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,6 +19,7 @@ import com.season.scut.net.JsonResponseHandler;
 import com.season.scut.net.RequestParamName;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -115,6 +115,11 @@ public class NewCaseActivity extends Activity {
         long endtime =endDate.getTime().getTime();
         String title =mEttitle.getText().toString();
         String matter =mEtmatter.getText().toString();
+        if (TextUtils.isEmpty(title)||TextUtils.isEmpty(matter)||TextUtils.isEmpty(mEtnotifytime.getText().toString())){
+            Toast.makeText(this,"请完整输入",Toast.LENGTH_SHORT).show();
+            return ;
+        }
+
         long notifytime=starttime - 60 * Long.valueOf(mEtnotifytime.getText().toString());
 
         RequestParams params = new RequestParams();

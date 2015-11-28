@@ -25,7 +25,7 @@ public class MApplication extends Application {
         loadNotification();
         pendingIntent =PendingIntent.getActivity(this,1
                 ,new Intent
-                (getApplicationContext(),NotifyActivity.class),PendingIntent.FLAG_NO_CREATE);
+                (getApplicationContext(),NotifyActivity.class),PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     public synchronized void addNotification(long time,long caseid){
@@ -53,17 +53,20 @@ public class MApplication extends Application {
         int index=1;
         AlarmManager alarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
+        long need_time=Long.MAX_VALUE;
+        long need_caseid=0;
         while (index<=totalnum){
             long caseid=sharedPreferences.getLong("notification_caseid",0);
             long time =sharedPreferences.getLong("notification_time",0);
             if (caseid==0||time==0){
                 return ;
             }
-            if (time>=System.currentTimeMillis()){
-                alarmManager.set(AlarmManager.RTC_WAKEUP,time,pendingIntent);
+            if (need_time>time&&time>System.currentTimeMillis()){
+                need_time=time;
+                need_caseid =caseid;
             }
             index++;
         }
+        alarmManager.set(AlarmManager.RTC_WAKEUP,Case.getCaseById(need_caseid).getAlarmtime(),pendingIntent);
     }
-
 }

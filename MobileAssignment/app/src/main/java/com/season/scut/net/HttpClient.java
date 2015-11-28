@@ -1,7 +1,6 @@
 package com.season.scut.net;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;

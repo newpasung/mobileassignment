@@ -1,11 +1,10 @@
 package com.season.scut;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
+    SwipeRefreshLayout mRefreshLayout;
     List<Case> caseList;
     ProgressDialog waitingDialog;
     MyAdapter adapter ;
@@ -39,17 +39,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         waitingDialog=new ProgressDialog(this);
         waitingDialog.show();
-        netRefreshData();
         caseList=new ArrayList<>();
+        mRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.refreshlayout);
         mRecyclerView=(RecyclerView)findViewById(R.id.recycler);
         adapter=new MyAdapter();
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                netRefreshData();
+            }
+        });
+        netRefreshData();
     }
 
     @Override
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void netRefreshData(){
+        mRefreshLayout.setRefreshing(true);
         RequestParams params =new RequestParams();
         HttpClient.get(this, "schedule/list", params, new JsonResponseHandler() {
             @Override
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }finally {
                     waitingDialog.dismiss();
+                    mRefreshLayout.setRefreshing(false);
                 }
             }
 
@@ -93,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     class MyAdapter extends RecyclerView.Adapter{
         @Override
