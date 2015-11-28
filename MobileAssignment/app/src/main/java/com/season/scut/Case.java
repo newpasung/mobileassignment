@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/11/27.
  */
-public class Case implements Parcelable{
+public class Case implements  Parcelable{
 
     public long id;
     public long starttime;
@@ -32,18 +32,15 @@ public class Case implements Parcelable{
     public static HashMap<Long ,Case> caseMap=new HashMap<>();
 
     public Case() {
-    }
-
-    public Case(long endtime, long starttime, String matters,String title) {
-        this.endtime = endtime;
-        this.matters = matters;
-        this.starttime = starttime;
-        this.title=title;
+        this.modifiedtime=0l;
     }
 
     protected Case(Parcel in) {
+        id = in.readLong();
         starttime = in.readLong();
         endtime = in.readLong();
+        alarmtime = in.readLong();
+        modifiedtime = in.readLong();
         title = in.readString();
         matters = in.readString();
     }
@@ -224,15 +221,6 @@ public class Case implements Parcelable{
         return caseList;
     }
 
-    public static List<Case> getDebugData(){
-        List<Case> caseList =new ArrayList<>();
-        for (int i=0;i<30;i++){
-            caseList.add(new Case(System.currentTimeMillis(),System.currentTimeMillis()
-                    ,"matter"+i,"title"+i));
-        }
-        return caseList;
-    }
-
     public static Case getCaseById(long id){
         return caseMap.get(id);
     }
@@ -244,8 +232,11 @@ public class Case implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeLong(starttime);
         dest.writeLong(endtime);
+        dest.writeLong(alarmtime);
+        dest.writeLong(modifiedtime);
         dest.writeString(title);
         dest.writeString(matters);
     }

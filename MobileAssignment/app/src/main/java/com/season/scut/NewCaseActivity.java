@@ -76,7 +76,7 @@ public class NewCaseActivity extends Activity {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 startDate.set(Calendar.YEAR,year);
-                                startDate.set(Calendar.MONTH,monthOfYear+1);
+                                startDate.set(Calendar.MONTH,monthOfYear);
                                 startDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                                 starttimedialog.show();
                             }
@@ -94,7 +94,7 @@ public class NewCaseActivity extends Activity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         endDate.set(Calendar.YEAR,year);
-                        endDate.set(Calendar.MONTH,monthOfYear+1);
+                        endDate.set(Calendar.MONTH,monthOfYear);
                         endDate.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                         endtimedialog.show();
                     }
@@ -123,7 +123,6 @@ public class NewCaseActivity extends Activity {
         }
 
         long notifytime=starttime - 60 * Long.valueOf(mEtnotifytime.getText().toString());
-        Log.i("notime", notifytime+"");
 
         RequestParams params = new RequestParams();
         params.put(RequestParamName.TITLE, title);

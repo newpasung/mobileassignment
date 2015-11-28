@@ -25,6 +25,6 @@ public class HttpClient {
         handler.setWeakReference(new WeakReference<Context>(context));
         params.put(RequestParamName.TOKEN, XManager.getToken(context));
         client.post(context, BASE_URL + url, params, handler);
-    }
+        }
 
 }
