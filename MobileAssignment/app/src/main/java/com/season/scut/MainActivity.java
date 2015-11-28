@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_newcase:{
-                startActivity(new Intent(this,NewCaseActivity.class));
+                startActivityForResult(new Intent(this,NewCaseActivity.class), 111);
             }break;
         }
         return true;
@@ -115,11 +115,12 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent =new Intent();
                     intent.setClass(MainActivity.this,CaseActivity.class);
                     intent.putExtra("data",caseList.get(position));
-                    startActivity(intent);
+                    startActivityForResult(intent, 222);
                 }
             });
             mHolder.mTvtime.setText(caseList.get(position).getStrTime());
             mHolder.mTvtitle.setText(caseList.get(position).getTitle());
+            mHolder.mTvcontent.setText(caseList.get(position).getMatters());
         }
 
         @Override
@@ -131,13 +132,24 @@ public class MainActivity extends AppCompatActivity {
 
             TextView mTvtime;
             TextView mTvtitle;
+            TextView mTvcontent;
             public MHolder(View itemView) {
                 super(itemView);
                 mTvtime=(TextView)itemView.findViewById(R.id.tv_time);
                 mTvtitle=(TextView) itemView.findViewById(R.id.tv_title);
+                mTvcontent=(TextView)itemView.findViewById(R.id.tv_matter);
             }
         }
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 111 && resultCode == RESULT_OK){
+            netRefreshData();
+        }
+        else if(requestCode == 222 && resultCode == RESULT_OK){
+            netRefreshData();
+        }
+    }
 }
