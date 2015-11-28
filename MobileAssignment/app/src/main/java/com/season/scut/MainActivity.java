@@ -112,13 +112,14 @@ public class MainActivity extends AppCompatActivity {
             mHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent =new Intent();
-                    intent.setClass(MainActivity.this,CaseActivity.class);
-                    intent.putExtra("data",caseList.get(position));
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, CaseActivity.class);
+                    intent.putExtra("data", caseList.get(position));
                     startActivityForResult(intent, 222);
                 }
             });
-            mHolder.mTvtime.setText(caseList.get(position).getStrTime());
+            //mHolder.mTvtime.setText(caseList.get(position).getStrTime());
+            mHolder.mTvtime.setText(caseList.get(position).getStringStartTime() +"");
             mHolder.mTvtitle.setText(caseList.get(position).getTitle());
             mHolder.mTvcontent.setText(caseList.get(position).getMatters());
         }
