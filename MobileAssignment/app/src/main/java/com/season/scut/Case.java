@@ -11,16 +11,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2015/11/27.
  */
-public class Case implements  Parcelable{
+public class Case implements  Parcelable ,Comparable{
 
     public long id;
     public long starttime;
@@ -89,36 +96,15 @@ public class Case implements  Parcelable{
     }
 
     public String getStringStartTime() {
-        StringBuilder builder =new StringBuilder();
         Date startdate =new Date(getStarttime()*1000);
-        builder.append(startdate.getYear());
-        builder.append(".");
-        builder.append(startdate.getMonth()+1);
-        builder.append(".");
-        builder.append(startdate.getDay());
-        builder.append(" ");
-        builder.append(startdate.getHours());
-        builder.append(":");
-        builder.append(startdate.getMinutes());
-
-        return builder.toString();
+        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(startdate);
     }
 
     public String getStringEndTime() {
-        StringBuilder builder =new StringBuilder();
-        Date startdate =new Date(getEndtime());
-        builder.append(startdate.getYear());
-        builder.append(".");
-        builder.append(startdate.getMonth()+1);
-        builder.append(".");
-        builder.append(startdate.getDay());
-        builder.append(" ");
-        builder.append(startdate.getHours());
-        builder.append(":");
-        builder.append(startdate.getMinutes());
-
-        return builder.toString();
-
+        Date enddate =new Date(getStarttime()*1000);
+        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(enddate);
     }
 
     public String getStrTime(){
@@ -233,7 +219,8 @@ public class Case implements  Parcelable{
                 caseList.add(mCase);
             }
         }
-        for (int i=caseList.size()-1;i>=0;i--){
+        Collections.sort(caseList);
+        /*for (int i=caseList.size()-1;i>=0;i--){
             for (int j=0;j<i;j++){
                 if (caseList.get(j).starttime>caseList.get(j+1).starttime){
                     caseList.get(j).starttime=caseList.get(j).starttime+caseList.get(j+1).starttime;
@@ -241,7 +228,7 @@ public class Case implements  Parcelable{
                     caseList.get(j).starttime=caseList.get(j).starttime-caseList.get(j+1).starttime;
                 }
             }
-        }
+        }*/
         //然后把list发回去
         return caseList;
     }
@@ -269,4 +256,10 @@ public class Case implements  Parcelable{
     public static void deletebyid(long id) {
         caseMap.remove(id);
     }
+
+    @Override
+    public int compareTo(Object another) {
+        return this.starttime>((Case)another).starttime?1:-1;
+    }
+
 }
