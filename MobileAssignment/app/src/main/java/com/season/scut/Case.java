@@ -233,6 +233,15 @@ public class Case implements  Parcelable{
                 caseList.add(mCase);
             }
         }
+        for (int i=caseList.size()-1;i>=0;i--){
+            for (int j=0;j<i;j++){
+                if (caseList.get(j).starttime>caseList.get(j+1).starttime){
+                    caseList.get(j).starttime=caseList.get(j).starttime+caseList.get(j+1).starttime;
+                    caseList.get(j+1).starttime=caseList.get(j).starttime-caseList.get(j+1).starttime;
+                    caseList.get(j).starttime=caseList.get(j).starttime-caseList.get(j+1).starttime;
+                }
+            }
+        }
         //然后把list发回去
         return caseList;
     }
