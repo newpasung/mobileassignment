@@ -13,6 +13,7 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2015/11/27.
@@ -24,8 +25,8 @@ public class NewCaseActivity extends Activity {
     EditText mEtnotifytime;
     Button mBtnstarttime;
     Button mBtnendtime;
-    GregorianCalendar startDate;
-    GregorianCalendar endDate;
+    GregorianCalendar startDate=new GregorianCalendar(Locale.CHINA);
+    GregorianCalendar endDate =new GregorianCalendar(Locale.CHINA);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

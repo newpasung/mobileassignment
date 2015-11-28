@@ -2,6 +2,10 @@ package com.season.scut;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.ArrayMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -9,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -18,8 +24,14 @@ public class Case implements Parcelable{
 
     public long starttime;
     public long endtime;
+    public long alarmtime;
+    public long modifiedtime;
     public String title;
     public String matters;
+    public static HashMap<Long ,Case> caseArrayMap=new HashMap<>();
+
+    public Case() {
+    }
 
     public Case(long endtime, long starttime, String matters,String title) {
         this.endtime = endtime;
@@ -103,15 +115,50 @@ public class Case implements Parcelable{
         return builder.toString();
     }
 
+    public static Case insertOrUpdate(JSONObject object){
+        Case mCase=null;
+        try {
+            long id =object.getLong("id");
+            if (caseArrayMap.containsKey(id)){
+                mCase= caseArrayMap.get(id);
+                mCase.starttime=object.getLong("time");
+                mCase.endtime=object.getLong("end_time");
+                mCase.modifiedtime=object.getLong("modified_time");
+                mCase.alarmtime =object.getLong("alarm_time");
+                mCase.matters=object.getString("content");
+                mCase.title=object.getString("title");
+            }else{
+                mCase =new Case();
+                mCase.starttime=object.getLong("time");
+                mCase.endtime=object.getLong("end_time");
+                mCase.modifiedtime=object.getLong("modified_time");
+                mCase.alarmtime =object.getLong("alarm_time");
+                mCase.matters=object.getString("content");
+                mCase.title=object.getString("title");
+                caseArrayMap.put(id,mCase);
+            }
+            return mCase;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
+        }
+    }
+
+    public List<Case> getListData(){
+        List<Case> caseList = new ArrayList<>();
+        Iterator<Long> iterator =caseArrayMap.keySet().iterator();
+        while(iterator.hasNext()){
+
+        }
+        return caseList;
+    }
+
     public static List<Case> getDebugData(){
         List<Case> caseList =new ArrayList<>();
         for (int i=0;i<30;i++){
             caseList.add(new Case(System.currentTimeMillis(),System.currentTimeMillis()
                     ,"matter"+i,"title"+i));
         }
-
-
-
         return caseList;
     }
 
